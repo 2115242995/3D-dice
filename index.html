@@ -1,2 +1,234 @@
 <!DOCTYPE html>
-<html> <head> <title>骰子游戏</title> <meta charset="utf-8"/> <script type="text/javascript"> // 画布大小 var canvasWidth = 400; var canvasHeight = 300; // 骰子大小 var diceWidth = 100; var diceHeight = 100; // 骰子位置 var diceX = 50; var diceY = 50; // 偏移量，用于绘制不同位置的骰子 var dx; var dy; // 点半径 var dotRadius = 6; var ctx; var point; var isFirstThrownFlag = true; function btnThrowClickHandler() { var sum = 0; // 记录每一次的两个骰子的和 ctx = document.getElementById("canvas").getContext("2d"); // 第一个骰子绘制开始 var randomNum = Math.floor((Math.random() * 6)) + 1; sum += randomNum; dx = diceX; dy = diceY; draw(randomNum); randomNum = Math.floor((Math.random() * 6)) + 1; sum += randomNum; dx = diceX + 150; draw(randomNum); if(isFirstThrownFlag) { switch(sum) { case 7: case 11: document.getElementById("txtOutCome").value = "You Win!"; break; case 2 : case 3 : case 12: document.getElementById("txtOutCome").value = "You lose!!"; break; default: point = sum; isFirstThrownFlag = false; document.getElementById("txtScore").value = point; document.getElementById("txtStage").value = "Need folloy up throw!!"; document.getElementById("txtOutCome").value = ""; break; } } else { switch(sum) { case point: document.getElementById("txtOutCome").value = "You Win!!"; document.getElementById("txtStage").value = "Back to first throw!!"; isFirstThrownFlag = true; document.getElementById("txtScore").value = ""; break; case 7: document.getElementById("txtOutCome").value = "You lose!!"; document.getElementById("txtStage").value = "Back to first throw!!"; isFirstThrownFlag = true; document.getElementById("txtScore").value = ""; break; } } } function draw(num) { // 绘制骰子的矩形外框 ctx.lineWidth = 5; ctx.clearRect(dx,dy,diceWidth,diceHeight); ctx.strokeRect(dx,dy,diceWidth,diceHeight); // 设置圆点的颜色 ctx.fillStyle = "#009966"; switch(num) { case 1: draw1(); break; case 2: draw2(); break; case 3: draw1(); draw2(); break; case 4: draw4(); break; case 5: draw1(); draw4(); break; case 6: draw2mid(); draw4(); break; default: break; } } function draw1() { // 绘制一个点，放到正中间 var dotX = dx + diceWidth * 0.5; var dotY = dy + diceHeight * 0.5; ctx.beginPath(); ctx.arc(dotX,dotY, dotRadius,0,2 * Math.PI,true); ctx.closePath(); ctx.fill(); } function draw2() { // 绘制两个点，一个左上角，一个右下角 // 左上点的角圆心 var dotX = dx + 3 * dotRadius; var dotY = dy + 3 * dotRadius; ctx.beginPath(); ctx.arc(dotX,dotY, dotRadius,0,2 * Math.PI,true); // 右下角点的圆心 dotX = dx + diceWidth - 3 * dotRadius; dotY = dy + diceHeight - 3 * dotRadius; ctx.arc(dotX,dotY, dotRadius,0,2 * Math.PI,true); ctx.closePath(); ctx.fill(); } function draw4() { // 先绘制左上角和右下角 draw2(); // 绘制右上角 var dotX = dx + diceWidth - 3 * dotRadius; var dotY = dy + 3 * dotRadius; ctx.beginPath(); ctx.arc(dotX,dotY, dotRadius,0,2 * Math.PI,true); dotX = dx + 3 * dotRadius; dotY = dy + diceHeight - 3 * dotRadius; ctx.arc(dotX,dotY, dotRadius,0,2 * Math.PI,true); ctx.closePath(); ctx.fill(); } function draw2mid() { // 第二行中间绘制两个点 var dotX = dx + 3 * dotRadius; var dotY = dy + 0.5 * diceHeight; ctx.beginPath(); ctx.arc(dotX,dotY, dotRadius,0,2 * Math.PI,true); dotX = dx + diceWidth - 3 * dotRadius; ctx.arc(dotX,dotY, dotRadius,0,2 * Math.PI,true); ctx.closePath(); ctx.fill(); } </script> </head> <body > <canvas id="canvas" width="400" height="300"> Sorry,your browser doesn't support Canvas!!! </canvas> <input type="button" value="Throw" onClick="btnThrowClickHandler()"/><br/> <table> <tr> <td>Stage:<input type="text" id="txtStage"/></td> <td>Score:<input type="text" id="txtScore"/></td> <td>OutCome:<input type="text" id="txtOutCome"/></td> </tr> </table> </body> </html>
+<html>
+ 
+<head>
+    <meta charset="utf-8">
+    <title>dice game</title>
+    <link rel="stylesheet" type="text/css" href="css/main.less">
+</head>
+ 
+<body>
+    <div class="container">
+        <ul class='cube'>
+            <li class='slide front n1'>
+                <span></span>
+            </li>
+            <li class='slide back n6'>
+             <p>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </p>
+                <p>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </p>
+                 
+            </li>
+            <li class='slide left n5'>
+                <p>
+                    <span></span>
+                    <span></span>
+                </p>
+                <p><span></span></p>
+                <p>
+                    <span></span>
+                    <span></span>
+                </p>
+            </li>
+            <li class='slide right n3'>
+                <span></span>
+                <span></span>
+                <span></span>
+            </li>
+            <li class='slide top n4'>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </li>
+            <li class='slide bottom n2'>
+                <span></span>
+                <span></span>
+            </li>
+        </ul>
+    </div>
+    <script type="text/javascript" src='js/jquery-2.2.1.min.js'></script>
+    <script type="text/javascript" src='js/main.js'></script>
+</body>
+ 
+</html>
+
+* {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+ 
+body {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    overflow: hidden;
+}
+ 
+.container {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0%;
+    left: 0%;
+    border-radius: 50px;
+}
+ 
+.cube {
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    top: 0;
+    left: 0;
+    line-height: 400px;
+    text-align: center;
+    transform-style: preserve-3d;
+    font-size: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    animation: demo 1s alternate infinite;
+}
+ 
+.slide {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    border: 1px solid gray;
+    border-radius: 50px;
+    top: 0;
+    left: 0;
+    color: red;
+    background: white;
+}
+ 
+span {
+    display: inline-block;
+    width: 100px;
+    height: 100px;
+    border-radius: 50px;
+    background-color: blue;
+    box-shadow: inset 0 0 50px 3px rgba(0, 0, 0, 0.5);
+}
+ 
+.front {
+    transform: translateZ(200px);
+}
+ 
+.n1 span {
+    width: 200px;
+    height: 200px;
+    border-radius: 100px;
+    background-color: red;
+    margin: 0 auto;
+    vertical-align: middle;
+    box-shadow: inset 0 0 100px 3px rgba(0, 0, 0, 0.5);
+}
+ 
+.bottom span {
+    text-align: center;
+}
+ 
+.left span {}
+ 
+.top span {}
+ 
+.n5 p {
+    display: block;
+    width: 360px;
+    height: 100px;
+    margin: 20px;
+    &:nth-child(1) {
+        span:nth-child(1) {
+            float: left;
+        }
+        span:nth-child(2) {
+            float: right;
+        }
+    }
+    &:nth-child(2) {
+        margin: 0 0 0 150px;
+    }
+    &:nth-child(3) {
+        span:nth-child(1) {
+            float: left;
+        }
+        span:nth-child(2) {
+            float: right;
+        }
+    }
+}
+ 
+.n2 span {
+    float: left;
+    &:nth-child(1) {
+        margin: 150px 50px 0 100px;
+    }
+    &:nth-child(2) {
+        margin: 150px 0 0 0;
+    }
+}
+ 
+.n6 p {
+    width: 300px;
+    height: 100px;
+    text-align: center;
+    line-height: 100px;
+    margin: 50px auto 50px auto;
+}
+ 
+.n6 span {
+    float: left;
+}
+ 
+.back {
+    transform: translateZ(-200px) rotateY(180deg);
+}
+ 
+.left {
+    transform: rotateY(90deg) translateZ(200px);
+}
+ 
+.n3 span {
+    width: 100px;
+    height: 100px;
+}
+ 
+.n4 span {
+    float: left;
+    margin: 50px;
+}
+ 
+.right {
+ 
+    transform: rotateY(-90deg) translateZ(200px);
+}
+ 
+.top {
+    transform: rotateX(-90deg) translateZ(200px);
+}
+ 
+.bottom {
+    transform: rotateX(90deg) translateZ(200px);
+}
+ 
+ 
+@keyframes demo {
+    from {
+        top: 0;
+        left: 0;
+        transform: rotateX(0deg) rotateY(0deg);
+    }
+    to {
+        top: 600px;
+        left: 1000px;
+        transform: rotateX(360deg) rotateY(360deg);
+    }
+}
